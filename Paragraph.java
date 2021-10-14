@@ -1,6 +1,6 @@
 package ro.uvt.sabloane;
 
-public class Paragraph {
+public class Paragraph implements Element{
     private String text_;
 
     public Paragraph(String text) { text_ = text; }
@@ -9,7 +9,11 @@ public class Paragraph {
 
     public String getText() { return text_; }
 
-    public void print() { System.out.print(text_); }
+    @Override
+    public boolean compareElements(Element object)
+    {
+        return text_.equalsIgnoreCase(((Paragraph)object).text_);
+    }
 
     @Override
     public boolean equals(Object paragraph)
@@ -28,4 +32,7 @@ public class Paragraph {
     {
         return text_;
     }
+
+    @Override
+    public void print() { System.out.print(this.toString()); }
 }

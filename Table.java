@@ -1,6 +1,6 @@
 package ro.uvt.sabloane;
 
-public class Table {
+public class Table implements Element{
     private String title_;
 
     public Table(String title)
@@ -18,7 +18,11 @@ public class Table {
         return title_;
     }
 
-    public void print() { System.out.print(title_); }
+    @Override
+    public boolean compareElements(Element object)
+    {
+        return title_.equalsIgnoreCase(((Table)object).title_);
+    }
 
     @Override
     public boolean equals(Object table)
@@ -37,4 +41,7 @@ public class Table {
     {
         return title_;
     }
+
+    @Override
+    public void print() { System.out.print(this.toString()); }
 }

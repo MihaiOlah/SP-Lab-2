@@ -5,38 +5,40 @@ import java.util.LinkedList;
 
 public class SubChapter {
     private String name_;
-    private Collection<Image> images_ = new LinkedList<>();
-    private Collection<Paragraph> paragraphs_ = new LinkedList<>();
-    private Collection<Table> tables_ = new LinkedList<>();
+    private Collection<Element> content_ = new LinkedList<>();
+    //private Collection<Image> images_ = new LinkedList<>();
+    //private Collection<Paragraph> paragraphs_ = new LinkedList<>();
+    //private Collection<Table> tables_ = new LinkedList<>();
 
     public SubChapter(String name) { name_ = name; }
 
     public SubChapter(SubChapter subChapter)
     {
         name_ = subChapter.name_;
-        images_ = new LinkedList<>(subChapter.images_);
-        paragraphs_ = new LinkedList<>(subChapter.paragraphs_);
-        tables_ = new LinkedList<>(subChapter.tables_);
+        //images_ = new LinkedList<>(subChapter.images_);
+        //paragraphs_ = new LinkedList<>(subChapter.paragraphs_);
+        //tables_ = new LinkedList<>(subChapter.tables_);
+        content_ = new LinkedList<>(subChapter.content_);
     }
 
     // Add / Remove image
     public boolean createNewImage(String imageName)
     {
-        return images_.add(new Image(imageName));
+        return content_.add(new Image(imageName));
     }
 
     public boolean createNewImage(Image image)
     {
-        return images_.add(new Image(image));
+        return content_.add(new Image(image));
     }
 
     public boolean removeImage(String imageName)
     {
-        for (Image image : images_)
+        for (Element image : content_)
         {
-            if (image.getImageName().equalsIgnoreCase(imageName))
+            if (image instanceof Image && ((Image)image).getImageName().equalsIgnoreCase(imageName))
             {
-                return images_.remove(image);
+                return content_.remove(image);
             }
         }
 
@@ -45,11 +47,11 @@ public class SubChapter {
 
     public boolean removeImage(Image image)
     {
-        for (Image imageTmp : images_)
+        for (Element imageTmp : content_)
         {
-            if (image.equals(imageTmp))
+            if (imageTmp instanceof Image && image.equals(imageTmp))
             {
-                return images_.remove(imageTmp);
+                return content_.remove(imageTmp);
             }
         }
 
@@ -59,21 +61,21 @@ public class SubChapter {
     // Add / Remove paragraph
     public boolean createNewParagraph(String paragraphName)
     {
-        return paragraphs_.add(new Paragraph(paragraphName));
+        return content_.add(new Paragraph(paragraphName));
     }
 
     public boolean createNewParagraph(Paragraph paragraph)
     {
-        return paragraphs_.add(new Paragraph(paragraph));
+        return content_.add(new Paragraph(paragraph));
     }
 
     public boolean removeParagraph(String paragraphName)
     {
-        for (Paragraph paragraph : paragraphs_)
+        for (Element paragraph : content_)
         {
-            if (paragraph.getText().equalsIgnoreCase(paragraphName))
+            if (paragraph instanceof Paragraph && ((Paragraph)paragraph).getText().equalsIgnoreCase(paragraphName))
             {
-                return paragraphs_.remove(paragraph);
+                return content_.remove(paragraph);
             }
         }
 
@@ -82,11 +84,11 @@ public class SubChapter {
 
     public boolean removeParagraph(Paragraph paragraph)
     {
-        for (Paragraph paragraphTmp : paragraphs_)
+        for (Element paragraphTmp : content_)
         {
-            if (paragraph.equals(paragraphTmp))
+            if (paragraphTmp instanceof Paragraph && paragraph.equals(paragraphTmp))
             {
-                return paragraphs_.remove(paragraphTmp);
+                return content_.remove(paragraphTmp);
             }
         }
 
@@ -96,21 +98,21 @@ public class SubChapter {
     // Add / Remove table
     public boolean createNewTable(String tableName)
     {
-        return tables_.add(new Table(tableName));
+        return content_.add(new Table(tableName));
     }
 
     public boolean createNewTable(Table table)
     {
-        return tables_.add(new Table(table));
+        return content_.add(new Table(table));
     }
 
     public boolean removeTable(String tableName)
     {
-        for (Table table : tables_)
+        for (Element table : content_)
         {
-            if (table.getTitle().equalsIgnoreCase(tableName))
+            if (table instanceof Table && ((Table)table).getTitle().equalsIgnoreCase(tableName))
             {
-                return tables_.remove(table);
+                return content_.remove(table);
             }
         }
 
@@ -119,11 +121,11 @@ public class SubChapter {
 
     public boolean removeTable(Table table)
     {
-        for (Table tableTmp : tables_)
+        for (Element tableTmp : content_)
         {
-            if (table.equals(tableTmp))
+            if (tableTmp instanceof Table && table.equals(tableTmp))
             {
-                return tables_.remove(tableTmp);
+                return content_.remove(tableTmp);
             }
         }
 
@@ -132,54 +134,54 @@ public class SubChapter {
 
     public String getSubChapterName() { return name_; }
 
-    public Collection<Image> getImages() { return Collections.unmodifiableCollection(images_); }
+    public Collection<Image> getImages()
+    {
+        Collection<Image> images = new LinkedList<>();
 
-    public Collection<Paragraph> getParagraphs() { return Collections.unmodifiableCollection(paragraphs_); }
+        for (Element element : content_)
+        {
+            if (element instanceof Image)
+            {
+                images.add((Image)element);
+            }
+        }
 
-    public Collection<Table> getTables() { return Collections.unmodifiableCollection(tables_); }
+        return Collections.unmodifiableCollection(images);
+    }
+
+    public Collection<Paragraph> getParagraphs()
+    {
+        Collection<Paragraph> paragraphs = new LinkedList<>();
+
+        for (Element element : content_)
+        {
+            if (element instanceof Paragraph)
+            {
+                paragraphs.add((Paragraph)element);
+            }
+        }
+
+        return Collections.unmodifiableCollection(paragraphs);
+    }
+
+    public Collection<Table> getTables()
+    {
+        Collection<Table> tables = new LinkedList<>();
+
+        for (Element element : content_)
+        {
+            if (element instanceof Table)
+            {
+                tables.add((Table)element);
+            }
+        }
+
+        return Collections.unmodifiableCollection(tables);
+    }
 
     public void print()
     {
-        String tmp;
-        int counter;
-
-        System.out.print(name_ + '\n');
-
-        // Add images
-        System.out.print("Images:\n");
-        counter = 1;
-        for (Image image : images_)
-        {
-            System.out.print(counter + ". " + image.toString() + '\n');
-            counter++;
-        }
-
-        if (images_.size() != 0)
-            System.out.print('\n');
-
-        // Add paragraphs
-        counter = 1;
-        System.out.print("Paragraphs:\n");
-        for (Paragraph paragraph : paragraphs_)
-        {
-            System.out.print(counter + ". " + paragraph.toString() + '\n');
-            counter++;
-        }
-
-        if (paragraphs_.size() != 0)
-            System.out.print('\n');
-
-        // Add tables
-        counter = 1;
-        System.out.print("Tables:\n");
-        for (Table table : tables_)
-        {
-            System.out.print(counter + ". " + table.toString() + '\n');
-            counter++;
-        }
-
-        if (tables_.size() != 0)
-            System.out.print('\n');
+        System.out.print(this);
     }
 
     private <T> boolean containsObject(Collection<T> list, T object)
@@ -222,8 +224,8 @@ public class SubChapter {
         if (!(subChapter instanceof SubChapter))
             return false;
 
-        return name_.equalsIgnoreCase(((SubChapter)subChapter).name_) && compareList(images_, ((SubChapter)subChapter).images_) &&
-                compareList(tables_, ((SubChapter)subChapter).tables_) && compareList(paragraphs_, ((SubChapter)subChapter).paragraphs_);
+        return name_.equalsIgnoreCase(((SubChapter)subChapter).name_) && compareList(content_, ((SubChapter)subChapter).content_);
+                //compareList(tables_, ((SubChapter)subChapter).tables_) && compareList(paragraphs_, ((SubChapter)subChapter).paragraphs_);
     }
 
     @Override
@@ -239,40 +241,14 @@ public class SubChapter {
         // Add images
         counter = 1;
         content.append("Images:\n");
-        for (Image image : images_)
+        for (Element element : content_)
         {
-            tmp = counter + ". " + image.toString() + '\n';
+            tmp = counter + ". " + element.toString() + '\n';
             content.append(tmp);
             counter++;
         }
 
-        if (images_.size() != 0)
-            content.append('\n');
-
-        // Add paragraphs
-        counter = 1;
-        content.append("Paragraphs:\n");
-        for (Paragraph paragraph : paragraphs_)
-        {
-            tmp = counter + ". " + paragraph.toString() + '\n';
-            content.append(tmp);
-            counter++;
-        }
-
-        if (paragraphs_.size() != 0)
-            content.append('\n');
-
-        // Add tables
-        counter = 1;
-        content.append("Tables:\n");
-        for (Table table : tables_)
-        {
-            tmp = counter + ". " + table.toString() + '\n';
-            content.append(tmp);
-            counter++;
-        }
-
-        if (tables_.size() != 0)
+        if (content_.size() != 0)
             content.append('\n');
 
         return content.toString();

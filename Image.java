@@ -1,6 +1,6 @@
 package ro.uvt.sabloane;
 
-public class Image {
+public class Image implements Element{
     private String imageName_;
 
     public Image(String imageName)
@@ -17,7 +17,14 @@ public class Image {
         return imageName_;
     }
 
-    public void print() { System.out.print(imageName_); }
+    @Override
+    public boolean compareElements(Element object)
+    {
+        return imageName_.equalsIgnoreCase(((Image)object).imageName_);
+    }
+
+    @Override
+    public void print() { System.out.print(this.toString()); }
 
     @Override
     public boolean equals(Object image)
